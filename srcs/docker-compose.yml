@@ -3,13 +3,13 @@ services:
 
     nginx:
         image: nginx:latest
-        container_name: nginx
+        container_name: nginx_hub
         ports:
             - '80:80'
         networks:
             - frontend_net
         volumes:
-            - ./nginx:/etc/nginx/conf.d
+            - ./nginx_hub:/etc/nginx/conf.d
             - ./logs/nginx:/var/log/nginx
             - ./wordpress:/var/www/html
         depends_on:

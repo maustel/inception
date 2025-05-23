@@ -64,10 +64,10 @@ display:
 	@docker ps -a;
 
 	@echo "$(BLU)------------------------ VOLUMES -----------------------$(WHITE)";
-	@docker volume list;
+	@docker volume ls;
 
 	@echo "$(BLU)------------------------ NETWORKS ----------------------$(WHITE)";
-	@docker network list;
+	@docker network ls;
 
 ################# COLORS #######################
 GRN	=	\033[0;32m

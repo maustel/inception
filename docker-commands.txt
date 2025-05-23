@@ -16,6 +16,7 @@ docker run [image:version] -> pulls image and runs container (like docker pull &
 docker run -p[myComputersPort]:[containersPort] -> fe -p6000:6312 binds my myComputersPort 6000 with containersPort 6312
 	(if there are two containers with same port, it does not matter, since each container has its own ports.
 	important is, that they are bound to different ports of my computer)
+docker run -it -d <image> /bin/bash -> starts bash shell interactively and doesn't close the container because the shell process is active.
 
 docker logs [ID]	->show logs
 docker logs [name]	->show logs
@@ -31,6 +32,7 @@ docker-compose -f [yaml-file] up	->start all containers that are in the yaml fil
 docker-compose -f [yaml-file] down	->shut off all containers that are in the yaml file
 
 docker build -t [ImageName]:[Tag] .	-> creates image with [ImageName] and [Tag] from Dockerfile of current directory (.)
+docker build /bath/to/Dockerfile	-> build image
 
 docker rm [ID] 		-> delete container
 docker rmi [ID] 	-> delete image
