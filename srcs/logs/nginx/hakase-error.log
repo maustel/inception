@@ -1,1 +1,0 @@
-2025/05/23 11:04:04 [error] 20#20: *1 connect() failed (111: Connection refused) while connecting to upstream, client: 172.19.0.1, server: wp-hakase.co, request: "GET /wp-admin/install.php HTTP/1.1", upstream: "fastcgi://172.19.0.2:9000", host: "localhost"
