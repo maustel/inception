@@ -1,0 +1,59 @@
+
+services:
+
+    nginx:
+        image: nginx:latest
+        container_name: nginx
+        ports:
+            - '80:80'
+        networks:
+            - frontend_net
+        volumes:
+            - ./nginx:/etc/nginx/conf.d
+            - ./logs/nginx:/var/log/nginx
+            - ./wordpress:/var/www/html
+        depends_on:
+            - "wordpress"
+        restart: always
+
+    mariadb:
+        image: mariadb
+        container_name: mariadb
+        ports:
+            - '3306:3306'
+        networks:
+            - backend_net
+        volumes:
+            - ./db-data:/var/lib/mysql
+        # environment:
+        #     - MYSQL_ROOT_PASSWORD=${ADMIN_PASSWORD} #is stored directly in .env
+        env_file:
+            - .env
+        restart: always
+
+    wordpress:
+        image: wordpress:4.7.1-php7.0-fpm
+        container_name: wordpress
+        ports:
+            - '9000:9000'
+        networks:
+            - frontend_net
+            - backend_net
+        volumes:
+            - ./wordpress:/var/www/html
+        environment:
+            - WORDPRESS_DB_NAME=wpdb
+            - WORDPRESS_TABLE_PREFIX=wp_
+            - WORDPRESS_DB_HOST=mariadb
+            # - WORDPRESS_DB_PASSWORD=${ADMIN_PASSWORD} #is stored directly in .env
+        env_file:
+            - .env
+        depends_on:
+            - "mariadb"
+        restart: always
+
+networks:
+  frontend_net:
+    name: inception_frontend
+  backend_net:
+    name: inception_backend

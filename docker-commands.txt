@@ -1,0 +1,36 @@
+
+docker images -> shows all the images I have got
+
+docker ps -> list running containers
+docker ps -a -> list running and stopped containers
+
+docker stop [ID] -> stops running container
+docker start [ID] -> starts stopped container again
+
+docker pull [image] -> pulls image (fe redis) from dockerHub
+
+docker run [imagename] -> starts running the image in a new container (container = running environment of an image)
+docker run -d -> detached mode (no log-outputs of it in current terminal)
+docker run --name [someName] [ImageName] -> gives the container the name [someName]
+docker run [image:version] -> pulls image and runs container (like docker pull && docker start)
+docker run -p[myComputersPort]:[containersPort] -> fe -p6000:6312 binds my myComputersPort 6000 with containersPort 6312
+	(if there are two containers with same port, it does not matter, since each container has its own ports.
+	important is, that they are bound to different ports of my computer)
+
+docker logs [ID]	->show logs
+docker logs [name]	->show logs
+
+docker exec -it [ID] /bin/bash -> open interacitve terminal to check environment of container and navigate in it
+docker exec -it [NAME] /bin/bash -> same thing
+
+docker network ls -> show docker networks
+docker network create [NetworkName] -> create new network with name [NetworkName]
+netstat -tulpn	-> check the system’s available ports/open ports
+
+docker-compose -f [yaml-file] up	->start all containers that are in the yaml file
+docker-compose -f [yaml-file] down	->shut off all containers that are in the yaml file
+
+docker build -t [ImageName]:[Tag] .	-> creates image with [ImageName] and [Tag] from Dockerfile of current directory (.)
+
+docker rm [ID] 		-> delete container
+docker rmi [ID] 	-> delete image
