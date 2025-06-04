@@ -1,6 +1,5 @@
 srcs/.env
 srcs/db-data/
 srcs/logs/
-srcs/nginx/
 srcs/wordpress/
 ./todo
