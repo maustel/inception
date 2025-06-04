@@ -2,7 +2,7 @@
 services:
 
     # nginx:
-    #     image: nginx:latest
+        # image: nginx:latest
     #     container_name: nginx_hub
     #     ports:
     #         - '80:80'
