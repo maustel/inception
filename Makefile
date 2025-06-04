@@ -43,7 +43,7 @@ clean_img:
 		echo "$(GRN)* All images removed$(WHITE)"; fi
 
 clean_net:
-	@if [ $$(docker network ls -q | wc -l) -gt 3]; then docker network rm $$(docker network ls -q); \
+	@if [ $$(docker network ls -q | wc -l) -gt 3 ]; then docker network rm $$(docker network ls -q); \
 		echo "$(GRN)* All networks removed$(WHITE)"; fi
 
 clean_vol:
@@ -51,6 +51,12 @@ clean_vol:
 		echo "$(GRN)* All volumes removed$(WHITE)"; fi
 
 clean: clean_con clean_img clean_net clean_vol
+
+#clean database of standard wordpess
+clean_wp:
+	@rm -rf srcs/wordpress/*
+	@rm -f srcs/wordpress/*
+	@rm -f srcs/wordpress/.*
 
 ##################################################
 ################# DISPLAY #######################

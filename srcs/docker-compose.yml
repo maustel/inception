@@ -1,17 +1,31 @@
 
 services:
 
+    # nginx:
+    #     image: nginx:latest
+    #     container_name: nginx_hub
+    #     ports:
+    #         - '80:80'
+    #     networks:
+    #         - frontend_net
+    #     volumes:
+    #         - ./nginx_hub:/etc/nginx/conf.d
+    #         - ./logs/nginx:/var/log/nginx
+    #         - ./wordpress:/var/www/html
+    #     depends_on:
+    #         - "wordpress"
+    #     restart: always
+
     nginx:
-        image: nginx:latest
-        container_name: nginx_hub
+        container_name: nginx
+        build: ./nginx/.
         ports:
-            - '80:80'
+            - '443:443'
         networks:
             - frontend_net
         volumes:
-            - ./nginx_hub:/etc/nginx/conf.d
-            - ./logs/nginx:/var/log/nginx
-            - ./wordpress:/var/www/html
+            - ./wordpress:/var/www/html:ro  #read only permission for files that are created by wordpress
+            #wp-volume should be locally stored, not in repo (?)
         depends_on:
             - "wordpress"
         restart: always
@@ -41,13 +55,13 @@ services:
             - backend_net
         volumes:
             - ./wordpress:/var/www/html
+        env_file:
+            - .env
         environment:
             - WORDPRESS_DB_NAME=wpdb
             - WORDPRESS_TABLE_PREFIX=wp_
             - WORDPRESS_DB_HOST=mariadb
             # - WORDPRESS_DB_PASSWORD=${ADMIN_PASSWORD} #is stored directly in .env
-        env_file:
-            - .env
         depends_on:
             - "mariadb"
         restart: always
@@ -57,3 +71,12 @@ networks:
     name: inception_frontend
   backend_net:
     name: inception_backend
+
+# volumes:
+#   wp_nginx_vol:
+#     name: wp_nginx_vol
+#     driver: local
+#     driver_opts:
+#       type: volume
+#       o: bind
+#       device: ${PWD}/nginx_nico/data

@@ -17,6 +17,7 @@ docker run -p[myComputersPort]:[containersPort] -> fe -p6000:6312 binds my myCom
 	(if there are two containers with same port, it does not matter, since each container has its own ports.
 	important is, that they are bound to different ports of my computer)
 docker run -it -d <image> /bin/bash -> starts bash shell interactively and doesn't close the container because the shell process is active.
+docker run -v local/path:/path/in/env [ID] -> creates volume in path/in/env (can be new path). everything created here will be stored in local/path
 
 docker logs [ID]	->show logs
 docker logs [name]	->show logs
@@ -36,3 +37,5 @@ docker build /bath/to/Dockerfile	-> build image
 
 docker rm [ID] 		-> delete container
 docker rmi [ID] 	-> delete image
+
+nginx -t can be used to test config file
