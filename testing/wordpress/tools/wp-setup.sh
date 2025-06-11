@@ -9,8 +9,7 @@ RESET='\033[0m'
 echo -e "${YEL}[WP-SETUP-SCRIPT]${RESET}"
 
 #print all commands in terminal
-set -x
-
+# set -x
 
 # -------------------[Wait for database] -----------
 echo -e "${BLUE}[***Waiting for mariadb to be ready.***]${RESET}"
@@ -19,6 +18,7 @@ until mysqladmin ping -h mariadb --silent; do
 done
 
 #------------------ [prerequisites] -----------------
+echo -e "${BLUE}[***Doing preconfiguration.***]${RESET}"
 #create necessary directories and give permissions
 mkdir -p /run/php
 chown www-data:www-data /run/php
@@ -36,12 +36,12 @@ mv wp-cli.phar /usr/local/bin/wp
 
 #create wp site's document root (for nginx)
 mkdir -p ${WP_PATH}
-#todo: put path in env
 
 #change ownership to www-data user and group, because nginx runs with www-data user
-chown -R www-data:www-data ${WP_PATH}
+su -s /bin/sh www-data -c "chown -R www-data:www-data ${WP_PATH}"
+su -s /bin/sh www-data -c "chmod -R 755 ${WP_PATH}"
 
-# DAVID: give permission for cache (solved all my issues)
+#give permission for cache
 mkdir -p /var/www/.wp-cli/cache
 chown -R www-data:www-data /var/www/.wp-cli
 
@@ -52,13 +52,14 @@ cd ${WP_PATH}
 if wp core is-installed --allow-root > /dev/null 2>&1; then
 	echo -e "${BLUE}[***WordPress is already installed***]${RESET}"
 else
-	#download wordpress
+	echo -e "${BLUE}[***Downloading wordpress... ***]${RESET}"
+	#------------[download wordpress] -----------
 	su -s /bin/sh www-data  -c 'wp core download \
 		--allow-root \
 		--path="${WP_PATH}"'
 
-	# configure (create config file wp-config.php)
-	#TODO maybe only wp config create without su stuff
+	#-----------[configure (create config file wp-config.php)] ------
+	echo -e "${BLUE}[***Creating cinfig file wp-config.php... ***]${RESET}"
 	su -s /bin/sh www-data -c 'wp config create \
 		--path="$WP_PATH" \
 		--dbname="$MYSQL_DATABASE" \
@@ -68,16 +69,8 @@ else
 		--dbprefix=wp_ \
 		--allow-root'
 
-	# configure
-	# wp core config \
-	# 	--dbname=wp \
-	# 	--dbuser=wp_user \
-	# 	--dbpass=pw \
-	# 	--dbhost=localhost \
-	# 	--dbprefix=wp_ \
-	# 	--allow-root
-
 	#-------------------[Run WordPress] -----------
+	echo -e "${BLUE}[***Installing worpress... ***]${RESET}"
 	su -s /bin/sh www-data -c 'wp core install \
 		--path="$WP_PATH" \
 		--url=https://"$DOMAIN_NAME" \
@@ -88,23 +81,21 @@ else
 		--admin_email=amsel@rainbow.com \
 		--skip-email'
 
-	# Create regular user
+	#-------------------[Create user] ------------------
+	echo -e "${BLUE}[***Creating User "$WP_USER"... ***]${RESET}"
 	su -s /bin/sh www-data -c 'wp user create ${WP_USER} ${WP_USER}@${DOMAIN_NAME} \
 			--user_pass=${WP_USER_PASSWORD} \
 			--porcelain \
 			--allow-root'
+
+	# Install Twenty Nineteen theme
+	echo -e "${BLUE}[***Install additional theme twentynineteen... ***]${RESET}"
+	su -s /bin/sh www-data -c 'wp theme install twentynineteen \
+		--activate \
+		--allow-root'
 fi
 
-# Set WordPress to listen on port 9000
-# echo -e "${BLUE}[***Update PHP-FPM to listen on port 9000***]${RESET}"
-# sed -i 's|^listen = .*|listen = 9000|' /etc/php/7.4/fpm/pool.d/www.conf
-
-# Check if WordPress settings are correct
-# echo -e "${BLUE}[***Validating PHP-FPM configuration***]${RESET}"
-# php-fpm7.4 -t
-
 #-------------------[Execute] -----------
-echo "[END WP-SETUP-SCRIPT]"
-
+echo -e "${BLUE}[***Execute wordpress ***]${RESET}"
 #execute this program in foreground
 exec php-fpm7.4 -F

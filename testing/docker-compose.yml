@@ -1,5 +1,19 @@
 
 services:
+    nginx:
+        container_name: nginx
+        build: ./nginx/.
+        ports:
+            - '443:443'
+        networks:
+            - nginx_wp_net
+        volumes:
+            - ./wordpress/volume:/var/www/html:ro  #read only permission for files that are created by wordpress
+            #wp-volume should be locally stored, not in repo (?)
+        depends_on:
+            - "wordpress"
+        restart: always
+
     wordpress:
         container_name: wordpress
         build:
@@ -9,6 +23,7 @@ services:
             - '9000:9000'
         networks:
             - wp_mariadb_net
+            - nginx_wp_net
         volumes:
             - ./wordpress/volume:/var/www/html
         env_file:

@@ -3,7 +3,7 @@
 YEL='\033[0;33m'
 RESET='\033[0m'
 
-set -e
+# set -e
 
 # Create directories and set permissions
 mkdir -p /run/mysqld /var/lib/mysql
