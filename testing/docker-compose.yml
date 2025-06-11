@@ -1,32 +1,28 @@
 
 services:
-    # wordpress:
-    #     container_name: wordpress
-    #     build: ./wordpress/.
-    #     ports:
-    #         - '9000:9000'
-    #     # networks:
-    #     #     - frontend_net
-    #     #     - backend_net
-    #     volumes:
-    #         - ./wordpress/volume:/var/www/html
-    #     env_file:
-    #         - .env
-    #     # environment:
-    #     #     - WORDPRESS_DB_NAME=wpdb
-    #     #     - WORDPRESS_TABLE_PREFIX=wp_
-    #     #     - WORDPRESS_DB_HOST=mariadb
-    #         # - WORDPRESS_DB_PASSWORD=${ADMIN_PASSWORD} #is stored directly in .env
-    #     depends_on:
-    #         - "mariadb"
-    #     restart: always
+    wordpress:
+        container_name: wordpress
+        build:
+            context: ./wordpress/.
+            # no_cache: true
+        ports:
+            - '9000:9000'
+        networks:
+            - wp_mariadb_net
+        volumes:
+            - ./wordpress/volume:/var/www/html
+        env_file:
+            - .env
+        depends_on:
+            - "mariadb"
+        restart: always
 
 
     mariadb:
         container_name: mariadb
         build:
             context: ./mariadb/.
-            no_cache: true
+            # no_cache: true
         ports:
             - 3306:3306
         restart: always

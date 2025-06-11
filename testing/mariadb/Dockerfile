@@ -12,10 +12,10 @@ COPY conf/50-server.cnf etc/mysql/mariadb.conf.d/50-server.cnf
 RUN chmod 644 /etc/mysql/mariadb.conf.d/50-server.cnf
 RUN chown mysql:mysql /etc/mysql/mariadb.conf.d/50-server.cnf
 
-# Copy scripts for entrypoint and initialization
+# Copy script for entrypoint and initialization
 COPY tools/mariadb_setup.sh /mariadb_setup.sh
 
-# Make scripts executable
+# Make script executable
 RUN chmod +x /mariadb_setup.sh
 
 # Use the custom mariadb_setup script
