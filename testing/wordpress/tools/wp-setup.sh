@@ -38,8 +38,8 @@ mv wp-cli.phar /usr/local/bin/wp
 mkdir -p ${WP_PATH}
 
 #change ownership to www-data user and group, because nginx runs with www-data user
-su -s /bin/sh www-data -c "chown -R www-data:www-data ${WP_PATH}"
-su -s /bin/sh www-data -c "chmod -R 755 ${WP_PATH}"
+chown -R www-data:www-data ${WP_PATH}
+chmod -R 755 ${WP_PATH}
 
 #give permission for cache
 mkdir -p /var/www/.wp-cli/cache
@@ -54,24 +54,24 @@ if wp core is-installed --allow-root > /dev/null 2>&1; then
 else
 	echo -e "${BLUE}[***Downloading wordpress... ***]${RESET}"
 	#------------[download wordpress] -----------
-	su -s /bin/sh www-data  -c 'wp core download \
+	wp core download \
 		--allow-root \
-		--path="${WP_PATH}"'
+		--path="${WP_PATH}"
 
 	#-----------[configure (create config file wp-config.php)] ------
 	echo -e "${BLUE}[***Creating cinfig file wp-config.php... ***]${RESET}"
-	su -s /bin/sh www-data -c 'wp config create \
+	wp config create \
 		--path="$WP_PATH" \
 		--dbname="$MYSQL_DATABASE" \
 		--dbuser="$MYSQL_USER" \
 		--dbpass="$MYSQL_PASSWORD" \
 		--dbhost="$DB_HOST"\
 		--dbprefix=wp_ \
-		--allow-root'
+		--allow-root
 
 	#-------------------[Run WordPress] -----------
 	echo -e "${BLUE}[***Installing worpress... ***]${RESET}"
-	su -s /bin/sh www-data -c 'wp core install \
+	wp core install \
 		--path="$WP_PATH" \
 		--url=https://"$DOMAIN_NAME" \
 		--title=inception \
@@ -79,20 +79,20 @@ else
 		--admin_password="$WP_ADMIN_PASSWORD" \
 		--allow-root \
 		--admin_email=amsel@rainbow.com \
-		--skip-email'
+		--skip-email
 
 	#-------------------[Create user] ------------------
 	echo -e "${BLUE}[***Creating User "$WP_USER"... ***]${RESET}"
-	su -s /bin/sh www-data -c 'wp user create ${WP_USER} ${WP_USER}@${DOMAIN_NAME} \
+	wp user create ${WP_USER} ${WP_USER}@${DOMAIN_NAME} \
 			--user_pass=${WP_USER_PASSWORD} \
 			--porcelain \
-			--allow-root'
+			--allow-root
 
 	# Install Twenty Nineteen theme
-	echo -e "${BLUE}[***Install additional theme twentynineteen... ***]${RESET}"
-	su -s /bin/sh www-data -c 'wp theme install twentynineteen \
-		--activate \
-		--allow-root'
+	# echo -e "${BLUE}[***Install additional theme twentynineteen... ***]${RESET}"
+	# wp theme install twentynineteen \
+	# 	--activate \
+	# 	--allow-root
 fi
 
 #-------------------[Execute] -----------

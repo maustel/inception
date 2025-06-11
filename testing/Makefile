@@ -50,18 +50,20 @@ clean_vol:
 	@if [ -n "$$(docker volume ls -q)" ]; then docker volume rm $$(docker volume ls -q); \
 		echo "$(GRN)* All volumes removed$(WHITE)"; fi
 
-clean: clean_con clean_img clean_net clean_vol
-
 #clean database of standard wordpess
 clean_wp:
-	@rm -rf srcs/wordpress/*
-	@rm -f srcs/wordpress/*
-	@rm -f srcs/wordpress/.*
+	@rm -f wordpress/volume*
+	@rm -f wordpress/volume.*
+	@rm -rf wordpress/volume*
 
 clean_mdb:
-	@rm -rf /volume_mariadb/*
-	@rm -f /volume_mariadb/*
-	@rm -f /volume_mariadb/.*
+	@rm -f volume_mariadb/*
+	@rm -f volume_mariadb/.*
+	@rm -rf volume_mariadb/*
+
+clean: clean_con clean_img clean_net clean_vol
+fclean: clean clean_wp clean_mdb
+
 
 ##################################################
 ################# DISPLAY #######################
