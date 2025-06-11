@@ -6,3 +6,4 @@ srcs/wordpress/
 trash/
 trash2/
 testing/volume_mariadb/
+testing/wordpress/volume/
