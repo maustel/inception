@@ -39,3 +39,11 @@ docker rm [ID] 		-> delete container
 docker rmi [ID] 	-> delete image
 
 nginx -t can be used to test config file
+
+
+MariaDB
+mysql -uroot -p -e "SHOW DATABASES;" ->show all databases
+mysql -uroot -p -e "SHOW DATABASES LIKE '%pattern';"
+-> Use pattern matching to filter databases. Replace '%pattern%' with your desired pattern (e.g., '%test%' for databases containing 'test').
+mariadbd --print-defaults -> check the rules that are set by config file
+

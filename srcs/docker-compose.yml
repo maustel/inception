@@ -1,21 +1,5 @@
 
 services:
-
-    # nginx:
-        # image: nginx:latest
-    #     container_name: nginx_hub
-    #     ports:
-    #         - '80:80'
-    #     networks:
-    #         - frontend_net
-    #     volumes:
-    #         - ./nginx_hub:/etc/nginx/conf.d
-    #         - ./logs/nginx:/var/log/nginx
-    #         - ./wordpress:/var/www/html
-    #     depends_on:
-    #         - "wordpress"
-    #     restart: always
-
     nginx:
         container_name: nginx
         build: ./nginx/.
@@ -24,7 +8,7 @@ services:
         networks:
             - frontend_net
         volumes:
-            - ./wordpress:/var/www/html:ro  #read only permission for files that are created by wordpress
+            - ./wordpress_leni:/var/www/html:ro  #read only permission for files that are created by wordpress
             #wp-volume should be locally stored, not in repo (?)
         depends_on:
             - "wordpress"
@@ -46,25 +30,46 @@ services:
         restart: always
 
     wordpress:
-        image: wordpress:4.7.1-php7.0-fpm
         container_name: wordpress
+        build: ./wordpress_leni/.
         ports:
             - '9000:9000'
         networks:
             - frontend_net
             - backend_net
         volumes:
-            - ./wordpress:/var/www/html
+            - ./wordpress_leni:/var/www/html
         env_file:
             - .env
-        environment:
-            - WORDPRESS_DB_NAME=wpdb
-            - WORDPRESS_TABLE_PREFIX=wp_
-            - WORDPRESS_DB_HOST=mariadb
+        # environment:
+        #     - WORDPRESS_DB_NAME=wpdb
+        #     - WORDPRESS_TABLE_PREFIX=wp_
+        #     - WORDPRESS_DB_HOST=mariadb
             # - WORDPRESS_DB_PASSWORD=${ADMIN_PASSWORD} #is stored directly in .env
         depends_on:
             - "mariadb"
         restart: always
+
+    # wordpress_hub:
+    #     image: wordpress:4.7.1-php7.0-fpm
+    #     container_name: wordpress
+    #     ports:
+    #         - '9000:9000'
+    #     networks:
+    #         - frontend_net
+    #         - backend_net
+    #     volumes:
+    #         - ./wordpress_hub:/var/www/html
+    #     env_file:
+    #         - .env
+    #     environment:
+    #         - WORDPRESS_DB_NAME=wpdb
+    #         - WORDPRESS_TABLE_PREFIX=wp_
+    #         - WORDPRESS_DB_HOST=mariadb
+    #         # - WORDPRESS_DB_PASSWORD=${ADMIN_PASSWORD} #is stored directly in .env
+    #     depends_on:
+    #         - "mariadb"
+    #     restart: always
 
 networks:
   frontend_net:

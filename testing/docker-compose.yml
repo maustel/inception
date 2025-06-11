@@ -1,0 +1,93 @@
+
+services:
+    # wordpress:
+    #     container_name: wordpress
+    #     build: ./wordpress/.
+    #     ports:
+    #         - '9000:9000'
+    #     # networks:
+    #     #     - frontend_net
+    #     #     - backend_net
+    #     volumes:
+    #         - ./wordpress/volume:/var/www/html
+    #     env_file:
+    #         - .env
+    #     # environment:
+    #     #     - WORDPRESS_DB_NAME=wpdb
+    #     #     - WORDPRESS_TABLE_PREFIX=wp_
+    #     #     - WORDPRESS_DB_HOST=mariadb
+    #         # - WORDPRESS_DB_PASSWORD=${ADMIN_PASSWORD} #is stored directly in .env
+    #     depends_on:
+    #         - "mariadb"
+    #     restart: always
+
+
+    mariadb:
+        container_name: mariadb
+        build:
+            context: ./mariadb/.
+            # no_cache: true
+        ports:
+            - 3306:3306
+        restart: always
+    #   root password required for mariadb to start
+    #   User / password / database name required for Wordpress to connect to mariadb
+        env_file:
+            - .env
+        volumes:
+            - ./volume_mariadb:/var/lib/mysql
+    #    secrets:
+        networks:
+            - wp_mariadb_net
+        init: true
+
+    # mariadb_hub:
+    #     image: mariadb
+    #     container_name: mariadb
+    #     ports:
+    #         - '3306:3306'
+    #     # networks:
+    #     #     - backend_net
+    #     volumes:
+    #         - ../volume_mariadb:/var/lib/mysql
+    #     # environment:
+    #     #     - MYSQL_ROOT_PASSWORD=${ADMIN_PASSWORD} #is stored directly in .env
+    #     env_file:
+    #         - ../.env
+    #     restart: always
+
+    # wordpress_hub:
+    #     image: wordpress:4.7.1-php7.0-fpm
+    #     container_name: wordpress
+    #     ports:
+    #         - '9000:9000'
+    #     networks:
+    #         - frontend_net
+    #         - backend_net
+    #     volumes:
+    #         - ./wordpress_hub:/var/www/html
+    #     env_file:
+    #         - .env
+    #     environment:
+    #         - WORDPRESS_DB_NAME=wpdb
+    #         - WORDPRESS_TABLE_PREFIX=wp_
+    #         - WORDPRESS_DB_HOST=mariadb
+    #         # - WORDPRESS_DB_PASSWORD=${ADMIN_PASSWORD} #is stored directly in .env
+    #     depends_on:
+    #         - "mariadb"
+    #     restart: always
+
+networks:
+  nginx_wp_net:
+    name: nginx_wp_address # 176.12.3.1
+  wp_mariadb_net:
+    name: wp_mariadb_address # 182.1.32.10
+
+# volumes:
+#   wp_nginx_vol:
+#     name: wp_nginx_vol
+#     driver: local
+#     driver_opts:
+#       type: volume
+#       o: bind
+#       device: ${PWD}/nginx_nico/data
