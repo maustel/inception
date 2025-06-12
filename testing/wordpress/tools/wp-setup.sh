@@ -60,7 +60,7 @@ else
 		--path="${WP_PATH}"
 
 	#-----------[configure (create config file wp-config.php)] ------
-	echo -e "${BLUE}[***Creating cinfig file wp-config.php... ***]${RESET}"
+	echo -e "${BLUE}[***Creating config file wp-config.php... ***]${RESET}"
 	wp config create \
 		--path="$WP_PATH" \
 		--dbname="$MYSQL_DATABASE" \
@@ -75,18 +75,17 @@ else
 	wp core install \
 		--path="$WP_PATH" \
 		--url=https://"$DOMAIN_NAME" \
-		--title=inception \
+		--title=Inception_42 \
 		--admin_user="$WP_ADMIN" \
 		--admin_password="$WP_ADMIN_PASSWORD" \
 		--allow-root \
-		--admin_email=amsel@rainbow.com \
+		--admin_email="$WP_ADMIN_MAIL" \
 		--skip-email
 
 	#-------------------[Create user] ------------------
 	wp user create \
 		"${WP_USER}" \
 		"${WP_USER_EMAIL}" \
-		--skip-email \
 		--user_pass="${WP_USER_PASSWORD}" \
 		--role=author \
 		--allow-root

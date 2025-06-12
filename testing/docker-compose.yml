@@ -2,7 +2,9 @@
 services:
     nginx:
         container_name: nginx
-        build: ./nginx/.
+        build:
+            context: ./nginx/.
+            # no_cache: true
         ports:
             - '443:443'
         networks:
@@ -31,6 +33,7 @@ services:
             - nginx_wp_net
         volumes:
             - ./data_wordpress:${WP_PATH}
+            # should be here: /home/login/data
         env_file:
             - .env
         depends_on:
@@ -58,6 +61,7 @@ services:
             - .env
         volumes:
             - ./data_mariadb:/var/lib/mysql
+            # should be here: /home/login/data
     #    secrets:
         networks:
             - wp_mariadb_net
@@ -69,42 +73,6 @@ services:
             retries: 5
         init: true
         restart: always
-
-    # mariadb_hub:
-    #     image: mariadb
-    #     container_name: mariadb
-    #     ports:
-    #         - '3306:3306'
-    #     # networks:
-    #     #     - backend_net
-    #     volumes:
-    #         - ../volume_mariadb:/var/lib/mysql
-    #     # environment:
-    #     #     - MYSQL_ROOT_PASSWORD=${ADMIN_PASSWORD} #is stored directly in .env
-    #     env_file:
-    #         - ../.env
-    #     restart: always
-
-    # wordpress_hub:
-    #     image: wordpress:4.7.1-php7.0-fpm
-    #     container_name: wordpress
-    #     ports:
-    #         - '9000:9000'
-    #     networks:
-    #         - frontend_net
-    #         - backend_net
-    #     volumes:
-    #         - ./wordpress_hub:/var/www/html
-    #     env_file:
-    #         - .env
-    #     environment:
-    #         - WORDPRESS_DB_NAME=wpdb
-    #         - WORDPRESS_TABLE_PREFIX=wp_
-    #         - WORDPRESS_DB_HOST=mariadb
-    #         # - WORDPRESS_DB_PASSWORD=${ADMIN_PASSWORD} #is stored directly in .env
-    #     depends_on:
-    #         - "mariadb"
-    #     restart: always
 
 networks:
   nginx_wp_net:

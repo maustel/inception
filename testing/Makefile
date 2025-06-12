@@ -16,7 +16,7 @@
 
 up: #env folders credentials build
 	@echo "$(GRN)* Creating containers...$(WHITE)";
-	docker compose up
+	docker compose up;
 
 down:
 	@echo "$(GRN)* Removing containers...$(WHITE)";
