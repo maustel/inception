@@ -8,7 +8,7 @@ RUN apt-get update -y && apt-get upgrade -y && \
 
 COPY ./tools/wp-setup.sh .
 # php configuration
-COPY ./tools/www.conf /etc/php/7.4/fpm/pool.d/
+COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/
 # RUN chmod +x wp-setup.sh && \
 # 	./wp-setup.sh
 

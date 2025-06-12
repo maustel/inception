@@ -12,10 +12,11 @@ echo -e "${YEL}[WP-SETUP-SCRIPT]${RESET}"
 # set -x
 
 # -------------------[Wait for database] -----------
-echo -e "${BLUE}[***Waiting for mariadb to be ready.***]${RESET}"
-until mysqladmin ping -h mariadb --silent; do
-    sleep 2
-done
+# i am doing it in docker-compose healthcheck
+# echo -e "${BLUE}[***Waiting for mariadb to be ready.***]${RESET}"
+# until mysqladmin ping -h mariadb --silent; do
+#     sleep 2
+# done
 
 #------------------ [prerequisites] -----------------
 echo -e "${BLUE}[***Doing preconfiguration.***]${RESET}"
@@ -82,15 +83,23 @@ else
 		--skip-email
 
 	#-------------------[Create user] ------------------
-	echo -e "${BLUE}[***Creating User "$WP_USER"... ***]${RESET}"
-	wp user create ${WP_USER} ${WP_USER}@${DOMAIN_NAME} \
-			--user_pass=${WP_USER_PASSWORD} \
-			--porcelain \
-			--allow-root
+	wp user create \
+		"${WP_USER}" \
+		"${WP_USER_EMAIL}" \
+		--skip-email \
+		--user_pass="${WP_USER_PASSWORD}" \
+		--role=author \
+		--allow-root
+
+	# echo -e "${BLUE}[***Creating User "$WP_USER"... ***]${RESET}"
+	# wp user create ${WP_USER} ${WP_USER}@${DOMAIN_NAME} \
+	# 		--user_pass=${WP_USER_PASSWORD} \
+	# 		--role=editor \
+	# 		--allow-root
 
 	# Install Twenty Nineteen theme
-	# echo -e "${BLUE}[***Install additional theme twentynineteen... ***]${RESET}"
-	# wp theme install twentynineteen \
+	# echo -e "${BLUE}[***Install additional theme matrioska... ***]${RESET}"
+	# wp theme install matrioska \
 	# 	--activate \
 	# 	--allow-root
 fi

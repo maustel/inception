@@ -52,14 +52,19 @@ clean_vol:
 
 #clean database of standard wordpess
 clean_wp:
-	@rm -f wordpress/volume*
-	@rm -f wordpress/volume.*
-	@rm -rf wordpress/volume*
+	echo "$(GRN)* cleaning wordpress database... $(WHITE)";
+	@find data_wordpress -mindepth 1 -type f -delete
+	@find data_wordpress -mindepth 1 -type d -empty -delete
+	@find data_wordpress -mindepth 1 -type d -delete
 
 clean_mdb:
-	@rm -f volume_mariadb/*
-	@rm -f volume_mariadb/.*
-	@rm -rf volume_mariadb/*
+	echo "$(GRN)* cleaning mariadb database... $(WHITE)";
+	@find data_mariadb -mindepth 1 -type f -delete
+	@find data_mariadb -mindepth 1 -type d -empty -delete
+	@find data_mariadb -mindepth 1 -type d -delete
+# @rm -rf data_mariadb/*
+# @rm -f data_mariadb/*
+# @rm -f data_mariadb/.*
 
 clean: clean_con clean_img clean_net clean_vol
 fclean: clean clean_wp clean_mdb
