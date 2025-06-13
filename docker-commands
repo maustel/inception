@@ -46,4 +46,5 @@ mysql -uroot -p -e "SHOW DATABASES;" ->show all databases
 mysql -uroot -p -e "SHOW DATABASES LIKE '%pattern';"
 -> Use pattern matching to filter databases. Replace '%pattern%' with your desired pattern (e.g., '%test%' for databases containing 'test').
 mariadbd --print-defaults -> check the rules that are set by config file
-
+docker exec -it mariadb mysql -u user -p ->log into sql databse as user
+docker exec -it mariadb mysql -u root ->try to login with root, shouldnt work

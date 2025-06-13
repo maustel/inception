@@ -2,86 +2,101 @@
 services:
     nginx:
         container_name: nginx
-        build: ./nginx/.
+        build:
+            context: ./requirements/nginx/.
+            # no_cache: true
+            tags:
+                - nginx
         ports:
             - '443:443'
         networks:
-            - frontend_net
+            - inception_network
+            # - nginx_wp_net
         volumes:
-            - ./wordpress_leni:/var/www/html:ro  #read only permission for files that are created by wordpress
-            #wp-volume should be locally stored, not in repo (?)
-        depends_on:
-            - "wordpress"
-        restart: always
-
-    mariadb:
-        image: mariadb
-        container_name: mariadb
-        ports:
-            - '3306:3306'
-        networks:
-            - backend_net
-        volumes:
-            - ./db-data:/var/lib/mysql
-        # environment:
-        #     - MYSQL_ROOT_PASSWORD=${ADMIN_PASSWORD} #is stored directly in .env
+            - wordpress_data:${WP_PATH}:ro  #read only permission for files that are created by wordpress
         env_file:
             - .env
+        depends_on:
+            wordpress:
+                condition: service_healthy
+        init: true
         restart: always
 
     wordpress:
         container_name: wordpress
-        build: ./wordpress_leni/.
+        build:
+            context: ./requirements/wordpress/.
+            # no_cache: true
+            tags:
+                - wordpress
         ports:
             - '9000:9000'
         networks:
-            - frontend_net
-            - backend_net
+            - inception_network
+            # - wp_mariadb_net
+            # - nginx_wp_net
         volumes:
-            - ./wordpress_leni:/var/www/html
+            - wordpress_data:${WP_PATH}
         env_file:
             - .env
-        # environment:
-        #     - WORDPRESS_DB_NAME=wpdb
-        #     - WORDPRESS_TABLE_PREFIX=wp_
-        #     - WORDPRESS_DB_HOST=mariadb
-            # - WORDPRESS_DB_PASSWORD=${ADMIN_PASSWORD} #is stored directly in .env
         depends_on:
-            - "mariadb"
+            mariadb:
+                condition: service_healthy
+        healthcheck:
+            test: ["CMD-SHELL", "mysql -u ${MYSQL_USER} -p${MYSQL_PASSWORD} -h mariadb ${MYSQL_DATABASE} -e 'SELECT 1;'"]
+            start_period: 7s
+            interval: 2s
+            timeout: 5s
+            retries: 5
+        init: true
         restart: always
 
-    # wordpress_hub:
-    #     image: wordpress:4.7.1-php7.0-fpm
-    #     container_name: wordpress
-    #     ports:
-    #         - '9000:9000'
-    #     networks:
-    #         - frontend_net
-    #         - backend_net
-    #     volumes:
-    #         - ./wordpress_hub:/var/www/html
-    #     env_file:
-    #         - .env
-    #     environment:
-    #         - WORDPRESS_DB_NAME=wpdb
-    #         - WORDPRESS_TABLE_PREFIX=wp_
-    #         - WORDPRESS_DB_HOST=mariadb
-    #         # - WORDPRESS_DB_PASSWORD=${ADMIN_PASSWORD} #is stored directly in .env
-    #     depends_on:
-    #         - "mariadb"
-    #     restart: always
+
+    mariadb:
+        container_name: mariadb
+        build:
+            context: ./requirements/mariadb/.
+            # no_cache: true
+            tags:
+                - mariadb
+        ports:
+            - 3306:3306
+        env_file:
+            - .env
+        volumes:
+            - mariadb_data:/var/lib/mysql
+        networks:
+            - inception_network
+            # - wp_mariadb_net
+        healthcheck:
+            test: ["CMD-SHELL", "mysqladmin ping -u ${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWORD}"]
+            start_period: 7s
+            interval: 2s
+            timeout: 5s
+            retries: 5
+        init: true
+        restart: always
 
 networks:
-  frontend_net:
-    name: inception_frontend
-  backend_net:
-    name: inception_backend
+    inception_network:
+        name: inception_network
 
-# volumes:
-#   wp_nginx_vol:
-#     name: wp_nginx_vol
-#     driver: local
-#     driver_opts:
-#       type: volume
-#       o: bind
-#       device: ${PWD}/nginx_nico/data
+# networks:
+#   nginx_wp_net:
+#     name: nginx_wp_address # 176.12.3.1
+#   wp_mariadb_net:
+#     name: wp_mariadb_address # 182.1.32.10
+
+volumes:
+    wordpress_data:
+        driver: local
+        driver_opts:
+            type: none
+            device: ${VOLUME_PATH}/wordpress
+            o: bind
+    mariadb_data:
+        driver: local
+        driver_opts:
+            type: none
+            device: ${VOLUME_PATH}/mariadb
+            o: bind

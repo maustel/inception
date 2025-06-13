@@ -90,20 +90,14 @@ else
 		--role=author \
 		--allow-root
 
-	# echo -e "${BLUE}[***Creating User "$WP_USER"... ***]${RESET}"
-	# wp user create ${WP_USER} ${WP_USER}@${DOMAIN_NAME} \
-	# 		--user_pass=${WP_USER_PASSWORD} \
-	# 		--role=editor \
-	# 		--allow-root
-
-	# Install Twenty Nineteen theme
-	# echo -e "${BLUE}[***Install additional theme matrioska... ***]${RESET}"
-	# wp theme install matrioska \
-	# 	--activate \
-	# 	--allow-root
+	# Install Twenty Twentytwo theme
+	echo -e "${BLUE}[***Install additional theme Twenty Twentytwo... ***]${RESET}"
+	wp theme install twentytwentytwo \
+		--activate \
+		--allow-root
 fi
 
 #-------------------[Execute] -----------
-echo -e "${BLUE}[***Execute wordpress ***]${RESET}"
+echo -e "${BLUE}[***Wordpress is ready! ***]${RESET}"
 #execute this program in foreground
 exec php-fpm7.4 -F

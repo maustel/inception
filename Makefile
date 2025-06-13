@@ -16,19 +16,19 @@
 
 up: #env folders credentials build
 	@echo "$(GRN)* Creating containers...$(WHITE)";
-	cd ./srcs/ && docker compose up
+	cd srcs && docker compose up;
 
 down:
 	@echo "$(GRN)* Removing containers...$(WHITE)";
-	cd ./srcs/ && docker compose down;
+	cd srcs && docker compose down;
 
 start:
 	@echo "$(GRN)* Starting containers...$(WHITE)";
-	cd ./srcs/ && docker compose start;
+	cd srcs && docker compose start;
 
 stop:
 	@echo "$(GRN)* Stopping containers...$(WHITE)";
-	cd ./srcs/ && docker compose stop;
+	cd srcs && docker compose stop;
 
 ##################################################
 ################# CLEANING #######################
@@ -50,13 +50,22 @@ clean_vol:
 	@if [ -n "$$(docker volume ls -q)" ]; then docker volume rm $$(docker volume ls -q); \
 		echo "$(GRN)* All volumes removed$(WHITE)"; fi
 
-clean: clean_con clean_img clean_net clean_vol
-
 #clean database of standard wordpess
 clean_wp:
-	@rm -rf srcs/wordpress/*
-	@rm -f srcs/wordpress/*
-	@rm -f srcs/wordpress/.*
+	echo "$(GRN) *cleaning wordpress database... $(WHITE)";
+	@find srcs/data_wordpress -mindepth 1 -type f -delete
+	@find srcs/data_wordpress -mindepth 1 -type d -empty -delete
+	@find srcs/data_wordpress -mindepth 1 -type d -delete
+
+clean_mdb:
+	echo "$(GRN) *cleaning mariadb database... $(WHITE)";
+	@find srcs/data_mariadb -mindepth 1 -type f -delete
+	@find srcs/data_mariadb -mindepth 1 -type d -empty -delete
+	@find srcs/data_mariadb -mindepth 1 -type d -delete
+
+clean: clean_con clean_img clean_net clean_vol
+fclean: clean clean_wp clean_mdb
+
 
 ##################################################
 ################# DISPLAY #######################
