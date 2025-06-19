@@ -53,15 +53,15 @@ clean_vol:
 #clean database of standard wordpess
 clean_wp:
 	echo "$(GRN) *cleaning wordpress database... $(WHITE)";
-	@find srcs/data_wordpress -mindepth 1 -type f -delete
-	@find srcs/data_wordpress -mindepth 1 -type d -empty -delete
-	@find srcs/data_wordpress -mindepth 1 -type d -delete
+	@find /home/maustel/data/wordpress -mindepth 1 -type f -delete
+	@find /home/maustel/data/wordpress -mindepth 1 -type d -empty -delete
+	@find /home/maustel/data/wordpress -mindepth 1 -type d -delete
 
 clean_mdb:
 	echo "$(GRN) *cleaning mariadb database... $(WHITE)";
-	@find srcs/data_mariadb -mindepth 1 -type f -delete
-	@find srcs/data_mariadb -mindepth 1 -type d -empty -delete
-	@find srcs/data_mariadb -mindepth 1 -type d -delete
+	@find /home/maustel/data/mariadb -mindepth 1 -type f -delete
+	@find /home/maustel/data/mariadb -mindepth 1 -type d -empty -delete
+	@find /home/maustel/data/mariadb -mindepth 1 -type d -delete
 
 clean: clean_con clean_img clean_net clean_vol
 fclean: clean clean_wp clean_mdb
