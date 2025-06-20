@@ -1,9 +1,2 @@
 srcs/.env
-srcs/db-data/
-srcs/logs/
-srcs/wordpress/
-./todo
-trash/
-trash2/
-testing/volume_mariadb/
-testing/wordpress/volume/
+docker-commands
