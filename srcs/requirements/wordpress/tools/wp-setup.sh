@@ -85,7 +85,7 @@ else
 	#-------------------[Create user] ------------------
 	wp user create \
 		"${WP_USER}" \
-		"${WP_USER_EMAIL}" \
+		"${WP_USER_MAIL}" \
 		--user_pass="${WP_USER_PASSWORD}" \
 		--role=author \
 		--allow-root

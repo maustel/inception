@@ -64,7 +64,6 @@ services:
             - mariadb_data:/var/lib/mysql
         networks:
             - inception_network
-            # - wp_mariadb_net
         healthcheck:
             test: ["CMD-SHELL", "mysqladmin ping -u ${MYSQL_ROOT_USER} -p${MYSQL_ROOT_PASSWORD}"]
             start_period: 7s
