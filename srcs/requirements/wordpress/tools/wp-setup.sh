@@ -8,16 +8,6 @@ RESET='\033[0m'
 
 echo -e "${YEL}[WP-SETUP-SCRIPT]${RESET}"
 
-#print all commands in terminal
-# set -x
-
-# -------------------[Wait for database] -----------
-# i am doing it in docker-compose healthcheck
-# echo -e "${BLUE}[***Waiting for mariadb to be ready.***]${RESET}"
-# until mysqladmin ping -h mariadb --silent; do
-#     sleep 2
-# done
-
 #------------------ [prerequisites] -----------------
 echo -e "${BLUE}[***Doing preconfiguration.***]${RESET}"
 #create necessary directories and give permissions

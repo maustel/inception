@@ -28,8 +28,6 @@ services:
             # no_cache: true
             tags:
                 - wordpress
-        ports:
-            - '9000:9000'
         networks:
             - inception_network
         volumes:
@@ -56,8 +54,6 @@ services:
             # no_cache: true
             tags:
                 - mariadb
-        ports:
-            - 3306:3306
         env_file:
             - .env
         volumes:

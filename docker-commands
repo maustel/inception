@@ -46,5 +46,19 @@ mysql -uroot -p -e "SHOW DATABASES;" ->show all databases
 mysql -uroot -p -e "SHOW DATABASES LIKE '%pattern';"
 -> Use pattern matching to filter databases. Replace '%pattern%' with your desired pattern (e.g., '%test%' for databases containing 'test').
 mariadbd --print-defaults -> check the rules that are set by config file
-docker exec -it mariadb mysql -u user -p ->log into sql databse as user
-docker exec -it mariadb mysql -u root ->try to login with root, shouldnt work
+docker exec -it mariadb mysql -u root -h mariadb ->try to login with root, shouldnt work
+docker exec -it mariadb mysql -u user -p -h mariadb ->log into sql databse as user
+SHOW DATABASES;
+USE merdaiolo;
+SHOW TABLES;
+DESCRIBE wp_users
+SELECT * FROM wp_users LIMIT 10;
+
+SSH:
+on vm: sudo systemctl start ssh
+systemctl status ssh
+local: ssh maustel@ip-address (10.11.239.155)
+get ip address from vm: in vm terminal: ip --brief address -> enp0s3
+
+check connections
+curl -v https://maustel.42.fr

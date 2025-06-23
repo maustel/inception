@@ -5,7 +5,7 @@ RUN apt-get update -y && apt-get upgrade -y &&\
 	apt-get install openssl
 
 COPY ./conf/maustel.conf /etc/nginx/conf.d/maustel.conf
-# RUN rm -rf /etc/nginx/sites-enabled/default
+RUN rm -rf /etc/nginx/sites-enabled/default
 
 RUN openssl req \
 	-x509 \
